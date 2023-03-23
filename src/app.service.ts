@@ -14,4 +14,9 @@ export class AppService {
         const resposne = await axios.get<IPost>(`https://jsonplaceholder.typicode.com/posts/${id}`);
         return resposne.data;
   }
+
+  async deletePost(id: number){
+    const resposne = await axios.delete<{}>(`https://jsonplaceholder.typicode.com/posts/${id}`);
+    return resposne.data;
+ }
 }

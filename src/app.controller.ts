@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,7 +7,13 @@ export class AppController {
 
   @Get("post/:postId")
   async getPost(@Param("postId") postId: number) {
-    const post = await this.appService.getPost(postId);
-    return post;
+    const result = await this.appService.getPost(postId);
+    return result;
+  }
+
+  @Delete("post/:postId")
+  async deletePost(@Param("postId") postId: number) {
+    const result = await this.appService.deletePost(postId);
+    return result;
   }
 }
