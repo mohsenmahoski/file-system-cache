@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from "axios";
+import { CreateCacheDecorator, RemoveCacheDecorator } from './cache.decorator';
 
 export interface IPost {
     userId: number;
@@ -10,13 +11,16 @@ export interface IPost {
 
 @Injectable()
 export class AppService {
-  async getPost(id: number){
-        const resposne = await axios.get<IPost>(`https://jsonplaceholder.typicode.com/posts/${id}`);
+
+  @CreateCacheDecorator
+  async getPost(postId: number){
+        const resposne = await axios.get<IPost>(`https://jsonplaceholder.typicode.com/posts/${postId}`);
         return resposne.data;
   }
 
-  async deletePost(id: number){
-    const resposne = await axios.delete<{}>(`https://jsonplaceholder.typicode.com/posts/${id}`);
+  @RemoveCacheDecorator
+  async deletePost(postId: number){
+    const resposne = await axios.delete<{}>(`https://jsonplaceholder.typicode.com/posts/${postId}`);
     return resposne.data;
  }
 }
