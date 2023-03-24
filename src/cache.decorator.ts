@@ -2,7 +2,14 @@ import * as fs from "fs";
 
 const cacheDir = `${__dirname}/../cache/`;
 
-const findContentInCacheDirectory = (contentId: string) => {
+export const checkCacheDirectoryExistence = () => {
+    if(fs.existsSync(cacheDir)){
+       return;
+    }
+    fs.mkdirSync(cacheDir);
+}
+
+const getContentFromCache = (contentId: string) => {
         const contentPath = `${cacheDir}${contentId}.json`;
         if(!fs.existsSync(contentPath)){
             return;
@@ -22,26 +29,19 @@ const removeFileContentCache = (contentId:string) => {
     if(fs.existsSync(contentPath)){
         fs.unlinkSync(contentPath);
     }
- }
-
-export const checkCacheDirectoryExistence = () => {
-   if(fs.existsSync(cacheDir)){
-      return;
-   }
-   fs.mkdirSync(cacheDir);
 }
 
 export const CreateCacheDecorator = (target, name, descriptor) => {
     const original = descriptor.value;
     descriptor.value = async function(...args) {
       const postId = args[0];
-      const content = findContentInCacheDirectory(postId);
+      const content = getContentFromCache(postId);
       if(!content){
         const result = await original.apply(this, args);
         createFileContentCache(postId, JSON.stringify(result));
         return result;
       } else {
-            return JSON.parse(content);
+            return {...JSON.parse(content), cache:true};
       }
     };
 };
