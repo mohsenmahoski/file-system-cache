@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app1:
+    image: file-system-cache
+    container_name: app1
+    volumes:
+      - shared-volume:/app/cache
+    ports:
+      - 3000:3000
+    networks:
+      - shared-network
+  app2:
+    image: file-system-cache
+    container_name: app2
+    volumes:
+      - shared-volume:/app/cache
+    ports:
+      - 5000:3000
+    networks:
+      - shared-network
+volumes:
+  shared-volume:
+      external: true
+networks:
+  shared-network:
